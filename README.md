@@ -49,21 +49,21 @@ Some parameters are required for a multitude of tasks, with the only exception o
 # Implementation rules:
   # 1. Tasks MUST call at least one service
   # 2. Tasks MUST produce a result
-  # 3. Tasks results object has 3 sub-objects: 
-  #       the result code(integer), the execution log artifact (url), the pipeline artifacts (url)
+  # 3. Tasks result object has 3 sub-objects: 
+  #       the result code(integer), the execution log artifact (URL), the pipeline artifacts (URL)
 
-ProductData:
+product_data:
   name: # Name of the product
 
 tasks:
 # Example build type task
-build_app_a: # The task name, MUST be unique
+- name: build_app_a # The task name, MUST be unique
   type: build # The task type
   after: [] # The tasks required to be done and successful before this one
   build:
     environment: my-docker-image # The environment in which to build the product
     command: docker build $REPOSITORY_DIR # The command to be executed to build the product 
-                                          # If multiple commands are required, then it should be a scipt
+                                          # If multiple commands are required, then it should be a script
   # Implementation rules: 
     # 1. The build MUST produce one or many build artifacts
     # 2. Only a build CAN produce a build artifact
@@ -71,7 +71,7 @@ build_app_a: # The task name, MUST be unique
 
 
 # Example release type task
-alpha_release_app_a:
+- name: alpha_release_app_a
   type: release # The task type
   after: ['build_app_a'] # The tasks required to be done and successful before this one
   release:
@@ -84,7 +84,7 @@ alpha_release_app_a:
     # 2. A Release task MUST NOT produce new build artifacts. It MAY tag upstream build artifacts
     # 3. Versioning SHOULD implement **semantic versioning 2.0.0 standard
 
-deploy_app_a_to_prod:
+- name: deploy_app_a_to_prod
   type: deployment
   after: ['alpha_release_app_a']
   deployment:
@@ -97,7 +97,7 @@ deploy_app_a_to_prod:
     # 2. Build artifacts MUST be pulled by the orchestrator
     # 3. Deployment configurations SHOULD be stored and versioned within the deployed application's repository
     ## Note: In this context, an orchestrator is a service able to read the desired state database
-    ##       and apply/deploy the desired state, example: ***ArgoCD.
+    ##       and apply/deploy the desired state, example: ***ArgoCD. More on this topic in future article
 
 ```
 
