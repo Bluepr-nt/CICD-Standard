@@ -49,8 +49,8 @@ Some parameters are required for a multitude of tasks, with the only exception o
 # Implementation rules:
   # 1. Tasks MUST call at least one service
   # 2. Tasks MUST produce a result
-  # 3. Tasks results object has 3 sub-objects: 
-  #       the result code(integer), the execution log artifact (url), the pipeline artifacts (url)
+  # 3. Tasks result object has 3 sub-objects: 
+  #       the result code(integer), the execution log artifact (URL), the pipeline artifacts (URL)
 
 product_data:
   name: # Name of the product
@@ -63,7 +63,7 @@ tasks:
   build:
     environment: my-docker-image # The environment in which to build the product
     command: docker build $REPOSITORY_DIR # The command to be executed to build the product 
-                                          # If multiple commands are required, then it should be a scipt
+                                          # If multiple commands are required, then it should be a script
   # Implementation rules: 
     # 1. The build MUST produce one or many build artifacts
     # 2. Only a build CAN produce a build artifact
@@ -93,7 +93,7 @@ tasks:
       task: alpha_release_app_a  # [Required] Reference a previous release task
   # Implementation rules: 
     # 1. The deployment task MUST only update a desired state database (example: git repository)
-    #    for the target environment. It MAY trigger a synchronisation of the orchestrator with the database
+    #    for the target environment. It MAY trigger a synchronization of the orchestrator with the database
     # 2. Build artifacts MUST be pulled by the orchestrator
     # 3. Deployment configurations SHOULD be stored and versioned within the deployed application's repository
     ## Note: In this context, an orchestrator is a service able to read the desired state database
