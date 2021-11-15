@@ -7,7 +7,7 @@ A CI/CD pipeline design and configuration standard proposition defined using yam
 
 1. **Every business with software development teams tries to build a CI/CD, but no standard exists.**
 
-2. **Most businesses don't have the resources, talents and velocity to build a top of the line CI/CD pipelines system.** 
+2. **Most businesses don't have the resources, talents and velocity to build a top of the line CI/CD pipelines system.**
 
 3. **Vendor lock-in of the different available tools kills the velocity of ecosystem.**
 
@@ -49,7 +49,7 @@ Some parameters are required for a multitude of tasks, with the only exception o
 # Implementation rules:
   # 1. Tasks MUST call at least one service
   # 2. Tasks MUST produce a result
-  # 3. Tasks result object has 3 sub-objects: 
+  # 3. Tasks result object has 3 sub-objects:
   #       the result code(integer), the execution log artifact (URL), the pipeline artifacts (URL)
 
 product_data:
@@ -59,12 +59,12 @@ tasks:
 # Example build type task
 - name: build_app_a # The task name, MUST be unique
   type: build # The task type
-  after: [] # The tasks required to be done and successful before this one
+  depends_on: [] # The tasks required to be done and successful before this one
   build:
     environment: my-docker-image # The environment in which to build the product
-    command: docker build $REPOSITORY_DIR # The command to be executed to build the product 
+    command: docker build $REPOSITORY_DIR # The command to be executed to build the product
                                           # If multiple commands are required, then it should be a script
-  # Implementation rules: 
+  # Implementation rules:
     # 1. The build MUST produce one or many build artifacts
     # 2. Only a build CAN produce a build artifact
     # 3. The build artifacts MUST have a unique build identifier per artifact, known as the build number
@@ -73,12 +73,12 @@ tasks:
 # Example release type task
 - name: alpha_release_app_a
   type: release # The task type
-  after: ['build_app_a'] # The tasks required to be done and successful before this one
+  depends_on: ['build_app_a'] # The tasks required to be done and successful before this one
   release:
     level: alpha # The release level of this task, possible values based on **semantic versioning
     type: MINOR # The impact of this release, possible values based on **semantic versioning
     metadata: # [Optional]
-  # Implementation rules: 
+  # Implementation rules:
     # 1. A Release task MUST create a release or pre-release version that will be associated
     #    with the corresponding build number
     # 2. A Release task MUST NOT produce new build artifacts. It MAY tag upstream build artifacts
@@ -86,12 +86,12 @@ tasks:
 
 - name: deploy_app_a_to_prod
   type: deployment
-  after: ['alpha_release_app_a']
+  depends_on: ['alpha_release_app_a']
   deployment:
-    environment: staging # [Required] the target environment 
+    environment: staging # [Required] the target environment
     release:
       task: alpha_release_app_a  # [Required] Reference a previous release task
-  # Implementation rules: 
+  # Implementation rules:
     # 1. The deployment task MUST only update a desired state database (example: git repository)
     #    for the target environment. It MAY trigger a synchronization of the orchestrator with the database
     # 2. Build artifacts MUST be pulled by the orchestrator
