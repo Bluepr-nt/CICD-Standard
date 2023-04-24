@@ -3,61 +3,66 @@ package validate
 import (
 	"ccs/pkg/cicd"
 	"fmt"
+	"io"
 	"io/ioutil"
-	"os"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
-func init() {
-	rootCmd := &cobra.Command{}
-	rootCmd.AddCommand(validateCmd)
+func NewValidateCommand(output io.Writer) *cobra.Command {
+	validateCmd := &cobra.Command{
+		Use:   "validate",
+		Short: "Validate the pipeline configuration against the CI/CD standard",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			filePath, err := cmd.Flags().GetString("file")
+			if err != nil {
+				return fmt.Errorf("error reading file flag: %v", err)
+			}
+
+			fileContent, err := ioutil.ReadFile(filePath)
+			if err != nil {
+				return fmt.Errorf("error reading file: %v", err)
+			}
+
+			var pipeline cicd.Pipeline
+			err = yaml.Unmarshal(fileContent, &pipeline)
+			if err != nil {
+				return fmt.Errorf("error unmarshalling YAML: %v", err)
+			}
+
+			if err := validatePipeline(&pipeline); err != nil {
+				return fmt.Errorf("pipeline validation failed: %v", err)
+			}
+
+			cmd.Println("Pipeline validation succeeded")
+			return nil
+		},
+	}
+
 	validateCmd.Flags().StringP("file", "f", "ccs.yaml", "Path to the pipeline configuration file")
-}
 
-var validateCmd = &cobra.Command{
-	Use:   "validate",
-	Short: "Validate the pipeline configuration against the CI/CD standard",
-	Run: func(cmd *cobra.Command, args []string) {
-		filePath, err := cmd.Flags().GetString("file")
-		if err != nil {
-			fmt.Println("Error reading file flag:", err)
-			os.Exit(1)
-		}
-
-		fileContent, err := ioutil.ReadFile(filePath)
-		if err != nil {
-			fmt.Println("Error reading file:", err)
-			os.Exit(1)
-		}
-
-		var pipeline cicd.Pipeline
-		err = yaml.Unmarshal(fileContent, &pipeline)
-		if err != nil {
-			fmt.Println("Error unmarshalling YAML:", err)
-			os.Exit(1)
-		}
-
-		if err := validatePipeline(&pipeline); err != nil {
-			fmt.Println("Pipeline validation failed:", err)
-			os.Exit(1)
-		}
-
-		fmt.Println("Pipeline validation succeeded")
-	},
+	return validateCmd
 }
 
 func validatePipeline(p *cicd.Pipeline) error {
-	taskNames := make(map[string]bool)
+	if p.Spec == nil {
+		return fmt.Errorf("pipeline spec must not be empty")
+	}
+
+	if len(p.Spec.Tasks) == 0 {
+		return fmt.Errorf("tasks must not be empty")
+	}
+
+	taskNames := make(map[string]*cicd.Task)
 
 	for _, task := range p.Spec.Tasks {
 		if _, exists := taskNames[task.Name]; exists {
 			return fmt.Errorf("duplicate task name: %s", task.Name)
 		}
-		taskNames[task.Name] = true
+		taskNames[task.Name] = &task
 
-		if err := validateTask(&task); err != nil {
+		if err := validateTask(&task, taskNames); err != nil {
 			return fmt.Errorf("task validation failed: %w", err)
 		}
 	}
@@ -65,18 +70,34 @@ func validatePipeline(p *cicd.Pipeline) error {
 	return nil
 }
 
-func validateTask(t *cicd.Task) error {
+func validateTask(t *cicd.Task, tasks map[string]*cicd.Task) error {
 	if t.Name == "" {
 		return fmt.Errorf("task name must be set")
 	}
 
+	if err := validateTaskType(t.Type); err != nil {
+		return fmt.Errorf("task type validation failed: %w", err)
+	}
+
 	if t.Needs != nil {
 		for _, dependency := range t.Needs {
-			if dependency == "" {
-				return fmt.Errorf("task %q has an empty dependency", t.Name)
+			if _, exists := tasks[dependency]; !exists {
+				return fmt.Errorf("task %q has an invalid dependency: %q", t.Name, dependency)
 			}
 		}
 	}
 
 	return nil
+}
+
+func validateTaskType(taskType string) error {
+	allowedTaskTypes := []string{"build", "release", "deployment"}
+
+	for _, allowedType := range allowedTaskTypes {
+		if taskType == allowedType {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("invalid task type: %s, allowed types: %v", taskType, allowedTaskTypes)
 }

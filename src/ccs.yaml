@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pipeline
+spec:
+  tasks:
+  - name: build
+    type: build
+    build:
+      environment: my-docker-image
+      command: docker build $REPOSITORY_DIR
+  - name: release
+    type: release
+    release:
+      environment: my-release-environment
+      command: release-command
+  - name: deployment
+    type: deployment
+    deployment:
+      environment: my-deployment-environment
+      command: deployment-command

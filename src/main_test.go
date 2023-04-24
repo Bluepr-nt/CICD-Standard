@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"io"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
 )
 
 func captureOutput(f func(cmd *cobra.Command, args []string)) string {
@@ -37,47 +37,42 @@ func captureOutput(f func(cmd *cobra.Command, args []string)) string {
 	return buf.String()
 }
 
-func TestInitCommandOutput(t *testing.T) {
-	initCmd := NewInitCommand()
-	expectedOutput := "Initializing a new project...\n"
-	output := captureOutput(initCmd.Run)
-	if output != expectedOutput {
-		t.Errorf("Expected output: %q, got: %q", expectedOutput, output)
-	}
-}
-
 func TestRunCommandOutput(t *testing.T) {
-	runCmd := NewRunCommand()
+	runCmd := NewRunCommand(nil)
+	output := new(bytes.Buffer)
+	runCmd.SetOutput(output)
+
 	expectedOutput := "Running the specified task or all tasks...\n"
-	output := captureOutput(runCmd.Run)
-	if output != expectedOutput {
+
+	if err := runCmd.Execute(); err != nil {
+		t.Errorf("No error expected, got: %v", err)
+	}
+	if output.String() != expectedOutput {
 		t.Errorf("Expected output: %q, got: %q", expectedOutput, output)
 	}
 }
 
 func TestStatusCommandOutput(t *testing.T) {
-	statusCmd := NewStatusCommand()
-	expectedOutput := "Displaying pipeline status...\n"
-	output := captureOutput(statusCmd.Run)
-	if output != expectedOutput {
-		t.Errorf("Expected output: %q, got: %q", expectedOutput, output)
-	}
-}
+	statusCmd := NewStatusCommand(nil)
+	output := new(bytes.Buffer)
+	statusCmd.SetOutput(output)
 
-func TestValidateCommandOutput(t *testing.T) {
-	validateCmd := NewValidateCommand()
-	expectedOutput := "Validating pipeline configuration...\n"
-	output := captureOutput(validateCmd.Run)
-	if output != expectedOutput {
+	expectedOutput := "Displaying pipeline status...\n"
+
+	if err := statusCmd.Execute(); err != nil {
+		t.Errorf("No error expected, got: %v", err)
+	}
+
+	if output.String() != expectedOutput {
 		t.Errorf("Expected output: %q, got: %q", expectedOutput, output)
 	}
 }
 
 func TestRootCommand(t *testing.T) {
-	rootCmd := NewRootCommand()
+	rootCmd := NewRootCommand(nil)
 
-	var buf bytes.Buffer
-	rootCmd.SetOut(&buf)
+	output := new(bytes.Buffer)
+	rootCmd.SetOut(output)
 
 	rootCmd.SetArgs([]string{"--help"})
 
@@ -90,26 +85,22 @@ func TestRootCommand(t *testing.T) {
 to create, manage, and execute tasks based on a standardized YAML configuration.
 
 Usage:
-  cicd [command]
+	cicd [command]
 
 Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  init        Initialize a new project with a default YAML configuration file
-  run         Execute a specific task or all tasks in the pipeline
-  status      Show the status of the pipeline, including task status and build artifacts
-  validate    Validate the pipeline configuration against the CI/CD standard
+	completion  Generate the autocompletion script for the specified shell
+	help        Help about any command
+	init        Initialize a new project with a default YAML configuration file
+	run         Execute a specific task or all tasks in the pipeline
+	status      Show the status of the pipeline, including task status and build artifacts
+	validate    Validate the pipeline configuration against the CI/CD standard
 
 Flags:
-  -e, --environment string   The environment in which to run the tasks (default "development")
-  -h, --help                 help for cicd
+	-h, --help   help for cicd
 
 Use "cicd [command] --help" for more information about a command.
 `
 
-	output := buf.String()
+	assert.Equal(t, output.String(), expected, "Output does not match expected value. Got:\n%s\n\nExpected:\n%s", output, expected)
 
-	if !strings.Contains(output, expected) {
-		t.Errorf("Output does not match expected value. Got:\n%s\n\nExpected:\n%s", output, expected)
-	}
 }

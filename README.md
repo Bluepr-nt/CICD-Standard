@@ -13,7 +13,7 @@ A CI/CD pipeline design and configuration standard proposition defined using yam
 
 ## Proposed Solution
 
-Following the Agile best practices, developing with iterations. In this case, pipelines. This is a proposition of a standerdized interface, plain and simple, inspired by the CRI (*Container Runtime Interface) and other similar standards, but in this case specific to CI/CD solutions. It also comes with best practices recommendations to facilitate the implementation.
+Following the Agile best practices, developing with iterations. In this case, pipelines. This is a proposition of a standardized interface, plain and simple, inspired by the CRI (*Container Runtime Interface) and other similar standards, but in this case specific to CI/CD solutions. It also comes with best practices recommendations to facilitate the implementation.
 
 Because it's a simple and widely used markup language, this proposition uses the yaml format in a Kubernetes inspired style to define the interface.
 
@@ -106,7 +106,7 @@ tasks:
 *\*\*\*[ArgoCD](https://argo-cd.readthedocs.io/en/stable/)*
 ## Contribution
 
-For questions, coments and suggestions open a GitHub issue or pull request.
+For questions, comments and suggestions open a GitHub issue or pull request.
 ## LICENSE
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
