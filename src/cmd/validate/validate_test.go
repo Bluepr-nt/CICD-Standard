@@ -78,8 +78,8 @@ Flags:
 			validateCmd.Flags().Set("file", configPath)
 
 			output := new(bytes.Buffer)
-			validateCmd.SetOutput(output)
-
+			validateCmd.SetOut(output)
+			validateCmd.SetErr(output)
 			err = validateCmd.Execute()
 
 			if tt.expectError {
@@ -130,7 +130,7 @@ spec:
 
 	// Capture the output of the command
 	outputBuffer := new(bytes.Buffer)
-	validateCmd.SetOutput(outputBuffer)
+	validateCmd.SetOut(outputBuffer)
 
 	err = validateCmd.Execute()
 
@@ -174,7 +174,7 @@ spec:
 	validateCmd.Flags().Set("file", tmpfile.Name())
 
 	outputBuffer := new(bytes.Buffer)
-	validateCmd.SetOutput(outputBuffer)
+	validateCmd.SetOut(outputBuffer)
 
 	err = validateCmd.Execute()
 
@@ -211,7 +211,7 @@ spec:
 	validateCmd.Flags().Set("file", tmpfile.Name())
 
 	outputBuffer := new(bytes.Buffer)
-	validateCmd.SetOutput(outputBuffer)
+	validateCmd.SetOut(outputBuffer)
 
 	err = validateCmd.Execute()
 

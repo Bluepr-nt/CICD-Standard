@@ -40,7 +40,7 @@ func captureOutput(f func(cmd *cobra.Command, args []string)) string {
 func TestRunCommandOutput(t *testing.T) {
 	runCmd := NewRunCommand(nil)
 	output := new(bytes.Buffer)
-	runCmd.SetOutput(output)
+	runCmd.SetOut(output)
 
 	expectedOutput := "Running the specified task or all tasks...\n"
 
@@ -55,7 +55,7 @@ func TestRunCommandOutput(t *testing.T) {
 func TestStatusCommandOutput(t *testing.T) {
 	statusCmd := NewStatusCommand(nil)
 	output := new(bytes.Buffer)
-	statusCmd.SetOutput(output)
+	statusCmd.SetOut(output)
 
 	expectedOutput := "Displaying pipeline status...\n"
 

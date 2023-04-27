@@ -17,7 +17,7 @@ func TestNewInitCommand_DefaultConfig(t *testing.T) {
 
 	// Capture command output
 	outputBuffer := new(bytes.Buffer)
-	cmd.SetOutput(outputBuffer)
+	cmd.SetOut(outputBuffer)
 
 	// Execute command
 	err := cmd.Execute()
@@ -44,7 +44,7 @@ func TestNewInitCommand_InteractiveConfig(t *testing.T) {
 
 	// Capture command output
 	outputBuffer := new(bytes.Buffer)
-	cmd.SetOutput(outputBuffer)
+	cmd.SetOut(outputBuffer)
 
 	// Execute command
 	err := cmd.Execute()
