@@ -3,14 +3,13 @@ package validate
 import (
 	"ccs/pkg/cicd"
 	"fmt"
-	"io"
 	"io/ioutil"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
-func NewValidateCommand(output io.Writer) *cobra.Command {
+func NewValidateCommand() *cobra.Command {
 	validateCmd := &cobra.Command{
 		Use:   "validate",
 		Short: "Validate the pipeline configuration against the CI/CD standard",

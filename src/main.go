@@ -54,7 +54,7 @@ to create, manage, and execute tasks based on a standardized YAML configuration.
 		},
 	}
 
-	cmd.AddCommand(initialize.NewInitCommand(nil, output), NewRunCommand(output), NewStatusCommand(output), validate.NewValidateCommand(output))
+	cmd.AddCommand(initialize.NewInitCommand(nil), NewRunCommand(output), NewStatusCommand(output), validate.NewValidateCommand())
 
 	return cmd
 }

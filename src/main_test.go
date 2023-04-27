@@ -85,18 +85,18 @@ func TestRootCommand(t *testing.T) {
 to create, manage, and execute tasks based on a standardized YAML configuration.
 
 Usage:
-	cicd [command]
+  cicd [command]
 
 Available Commands:
-	completion  Generate the autocompletion script for the specified shell
-	help        Help about any command
-	init        Initialize a new project with a default YAML configuration file
-	run         Execute a specific task or all tasks in the pipeline
-	status      Show the status of the pipeline, including task status and build artifacts
-	validate    Validate the pipeline configuration against the CI/CD standard
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  init        Initialize a new project with a default YAML configuration file
+  run         Execute a specific task or all tasks in the pipeline
+  status      Show the status of the pipeline, including task status and build artifacts
+  validate    Validate the pipeline configuration against the CI/CD standard
 
 Flags:
-	-h, --help   help for cicd
+  -h, --help   help for cicd
 
 Use "cicd [command] --help" for more information about a command.
 `

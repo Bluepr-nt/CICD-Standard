@@ -74,7 +74,7 @@ Flags:
 			err := ioutil.WriteFile(configPath, []byte(tt.configContent), 0644)
 			assert.NoError(t, err)
 
-			validateCmd := NewValidateCommand(nil)
+			validateCmd := NewValidateCommand()
 			validateCmd.Flags().Set("file", configPath)
 
 			output := new(bytes.Buffer)
@@ -125,7 +125,7 @@ spec:
 	}
 
 	// Create the Validate command
-	validateCmd := NewValidateCommand(nil)
+	validateCmd := NewValidateCommand()
 	validateCmd.Flags().Set("file", tmpfile.Name())
 
 	// Capture the output of the command
@@ -170,7 +170,7 @@ spec:
 		t.Fatal("Error closing temporary file:", err)
 	}
 
-	validateCmd := NewValidateCommand(nil)
+	validateCmd := NewValidateCommand()
 	validateCmd.Flags().Set("file", tmpfile.Name())
 
 	outputBuffer := new(bytes.Buffer)
@@ -207,7 +207,7 @@ spec:
 		t.Fatal("Error closing temporary file:", err)
 	}
 
-	validateCmd := NewValidateCommand(nil)
+	validateCmd := NewValidateCommand()
 	validateCmd.Flags().Set("file", tmpfile.Name())
 
 	outputBuffer := new(bytes.Buffer)

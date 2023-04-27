@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewInitCommand(input io.Reader, output io.Writer) *cobra.Command {
+func NewInitCommand(input io.Reader) *cobra.Command {
 	initCmd := &cobra.Command{
 		Use:   "init",
 		Short: "Initialize a new project with a default YAML configuration file",

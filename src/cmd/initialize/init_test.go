@@ -12,7 +12,7 @@ import (
 
 func TestNewInitCommand_DefaultConfig(t *testing.T) {
 	// Prepare command
-	cmd := NewInitCommand(nil, nil)
+	cmd := NewInitCommand(nil)
 	cmd.Flags().Set("interactive", "false")
 
 	// Capture command output
@@ -39,7 +39,7 @@ func TestNewInitCommand_DefaultConfig(t *testing.T) {
 func TestNewInitCommand_InteractiveConfig(t *testing.T) {
 	// Prepare command
 	input := strings.NewReader("my-docker-image\nmy-build-command\nmy-release-environment\nmy-release-command\nmy-deployment-environment\nmy-deployment-command\n")
-	cmd := NewInitCommand(input, nil)
+	cmd := NewInitCommand(input)
 	cmd.Flags().Set("interactive", "true")
 
 	// Capture command output
