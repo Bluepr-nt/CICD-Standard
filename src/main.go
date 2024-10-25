@@ -42,15 +42,15 @@ func NewRootCommand(output io.Writer) *cobra.Command {
 to create, manage, and execute tasks based on a standardized YAML configuration.`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			// Bind environment variables
-			viper.AutomaticEnv()
 
 			// Read the configuration file
 			viper.SetConfigName("ccs")
 			viper.AddConfigPath(".")
-
+			viper.SetEnvPrefix("ccs")
 			if err := viper.ReadInConfig(); err != nil {
 				cmd.Println("Warning reading config file:", err)
 			}
+			viper.AutomaticEnv()
 		},
 	}
 
