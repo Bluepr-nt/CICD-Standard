@@ -1,4 +1,4 @@
-# CI/CD Standard Proposal: 0.0.0
+# CI/CD Standard Proposal: 0.1.0
 
 A CI/CD pipeline design and configuration standard proposition defined using yaml format.
 ---
@@ -59,7 +59,8 @@ tasks:
 # Example build type task
 - name: build_app_a # The task name, MUST be unique
   type: build # The task type
-  depends_on: [] # The tasks required to be done and successful before this one
+  needs: [] # The tasks required to be done and successful before this one
+  triggers: [] # [Optional] The events that trigger this task, example: git push, pull request, etc
   build:
     environment: my-docker-image # The environment in which to build the product
     command: docker build $REPOSITORY_DIR # The command to be executed to build the product
@@ -69,11 +70,24 @@ tasks:
     # 2. Only a build CAN produce a build artifact
     # 3. The build artifacts MUST have a unique build identifier per artifact, known as the build number
 
+# Example test type task
+- name: test_app_a
+  type: test
+  needs: ['build_app_a'] 
+  triggers: []
+  test:
+    environment: my-docker-image # The environment in which to test the product
+    command: docker test $REPOSITORY_DIR # The command to be executed to test the product
+  # Implementation rules:
+    # 1. A test task MUST produce one or many test artifacts
+    # 2. Only a test CAN produce a test artifact
+    # 3. The test artifacts MUST have a unique test identifier per artifact, extending the build number with a test identifier, example: build-1-test-1, build-1-test-2, etc
 
 # Example release type task
 - name: alpha_release_app_a
-  type: release # The task type
-  depends_on: ['build_app_a'] # The tasks required to be done and successful before this one
+  type: release
+  needs: ['build_app_a'] 
+  triggers: []
   release:
     level: alpha # The release level of this task, possible values based on **semantic versioning
     type: MINOR # The impact of this release, possible values based on **semantic versioning
@@ -86,7 +100,8 @@ tasks:
 
 - name: deploy_app_a_to_prod
   type: deployment
-  depends_on: ['alpha_release_app_a']
+  needs: ['alpha_release_app_a']
+  triggers: []
   deployment:
     environment: staging # [Required] the target environment
     release:
@@ -109,5 +124,3 @@ tasks:
 For questions, coments and suggestions open a GitHub issue or pull request.
 ## LICENSE
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-
-
