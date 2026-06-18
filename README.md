@@ -59,7 +59,7 @@ tasks:
 # Example build type task
 - name: build_app_a # The task name, MUST be unique
   type: build # The task type
-  depends_on: [] # The tasks required to be done and successful before this one
+  needs: [] # The tasks required to be done and successful before this one
   build:
     environment: my-docker-image # The environment in which to build the product
     command: docker build $REPOSITORY_DIR # The command to be executed to build the product
@@ -73,7 +73,7 @@ tasks:
 # Example release type task
 - name: alpha_release_app_a
   type: release # The task type
-  depends_on: ['build_app_a'] # The tasks required to be done and successful before this one
+  needs: ['build_app_a'] # The tasks required to be done and successful before this one
   release:
     level: alpha # The release level of this task, possible values based on **semantic versioning
     type: MINOR # The impact of this release, possible values based on **semantic versioning
@@ -86,7 +86,7 @@ tasks:
 
 - name: deploy_app_a_to_prod
   type: deployment
-  depends_on: ['alpha_release_app_a']
+  needs: ['alpha_release_app_a']
   deployment:
     environment: staging # [Required] the target environment
     release:
@@ -109,5 +109,3 @@ tasks:
 For questions, coments and suggestions open a GitHub issue or pull request.
 ## LICENSE
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
-
-
