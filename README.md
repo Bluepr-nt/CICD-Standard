@@ -60,6 +60,7 @@ tasks:
 - name: build_app_a # The task name, MUST be unique
   type: build # The task type
   needs: [] # The tasks required to be done and successful before this one
+  triggers: [] # [Optional] The events that trigger this task, example: git push, pull request, etc
   build:
     environment: my-docker-image # The environment in which to build the product
     command: docker build $REPOSITORY_DIR # The command to be executed to build the product
@@ -69,11 +70,11 @@ tasks:
     # 2. Only a build CAN produce a build artifact
     # 3. The build artifacts MUST have a unique build identifier per artifact, known as the build number
 
-
 # Example release type task
 - name: alpha_release_app_a
-  type: release # The task type
-  needs: ['build_app_a'] # The tasks required to be done and successful before this one
+  type: release
+  needs: ['build_app_a'] 
+  triggers: []
   release:
     level: alpha # The release level of this task, possible values based on **semantic versioning
     type: MINOR # The impact of this release, possible values based on **semantic versioning
@@ -87,6 +88,7 @@ tasks:
 - name: deploy_app_a_to_prod
   type: deployment
   needs: ['alpha_release_app_a']
+  triggers: []
   deployment:
     environment: staging # [Required] the target environment
     release:
