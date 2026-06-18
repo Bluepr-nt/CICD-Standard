@@ -70,6 +70,19 @@ tasks:
     # 2. Only a build CAN produce a build artifact
     # 3. The build artifacts MUST have a unique build identifier per artifact, known as the build number
 
+# Example test type task
+- name: test_app_a
+  type: test
+  needs: ['build_app_a'] 
+  triggers: []
+  test:
+    environment: my-docker-image # The environment in which to test the product
+    command: docker test $REPOSITORY_DIR # The command to be executed to test the product
+  # Implementation rules:
+    # 1. A test task MUST produce one or many test artifacts
+    # 2. Only a test CAN produce a test artifact
+    # 3. The test artifacts MUST have a unique test identifier per artifact, extending the build number with a test identifier, example: build-1-test-1, build-1-test-2, etc
+    
 # Example release type task
 - name: alpha_release_app_a
   type: release
