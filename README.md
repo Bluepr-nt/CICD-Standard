@@ -1,4 +1,4 @@
-# CI/CD Standard Proposal: 0.0.0
+# CI/CD Standard Proposal: 0.1.0
 
 A CI/CD pipeline design and configuration standard proposition defined using yaml format.
 ---
@@ -82,7 +82,7 @@ tasks:
     # 1. A test task MUST produce one or many test artifacts
     # 2. Only a test CAN produce a test artifact
     # 3. The test artifacts MUST have a unique test identifier per artifact, extending the build number with a test identifier, example: build-1-test-1, build-1-test-2, etc
-    
+
 # Example release type task
 - name: alpha_release_app_a
   type: release
