@@ -37,7 +37,7 @@ A CI/CD pipeline is composed of a multitude of services and its user usually def
 
 Some parameters are required for a multitude of tasks, with the only exception of simple tasks. Tasks can be categorized by well known actionable concepts such **build**, **release** and **deploy**. Those concepts paired with the parameters will serve as the baseline of the proposed interface.
 
-*Leaving out the plan, code, test, operate and monitor concepts for the next iteration.*
+*Leaving out the plan, code, and monitor concepts for the next iteration.*
 
 ## Tasks General Rules
 
