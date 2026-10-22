@@ -1,4 +1,4 @@
-# CI/CD Standard Proposal: 0.1.0
+# CI/CD Standard Proposal: 0.1.1
 
 A CI/CD pipeline design and configuration standard proposition defined using yaml format.
 ---
